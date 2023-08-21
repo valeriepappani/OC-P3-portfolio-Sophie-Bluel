@@ -6,7 +6,6 @@ const projet = await reponse.json(); //Traduit les données de l'API en JSON
 const reponseCategories = await fetch('http://localhost:5678/api/categories');
 const categories = await reponseCategories.json(); //Traduit les données de l'API en JSON
 
-
 const sectionProjet = document.getElementById("portfolio"); //Récupération de l'id #portfolio
 
 
