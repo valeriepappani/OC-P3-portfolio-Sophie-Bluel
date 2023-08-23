@@ -400,3 +400,11 @@ input[type="password"] {
 #login footer {
 	bottom: 0;
 }
+
+.message-erreur {
+	text-align: center;
+	color: red;
+	padding-bottom: 25px;
+	font-size: 16px;
+	line-height: 20px;
+}
