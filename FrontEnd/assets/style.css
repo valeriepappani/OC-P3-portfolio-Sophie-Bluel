@@ -408,3 +408,114 @@ input[type="password"] {
 	font-size: 16px;
 	line-height: 20px;
 }
+
+
+.btnLog {
+	cursor: pointer;
+}
+
+/********Mode edition ********/
+.divEdition {
+	display: flex;
+	justify-content:center;
+	align-items:center;
+	gap: 20px;
+	background-color: #000;
+	height: 50px;
+	padding:20px;
+}
+
+.divEdition a {
+	color: #FFF;
+	font-size: 16px;
+	text-decoration: none;
+	font-family: 'Work Sans';
+	font-weight: 400;
+}
+
+.divEdition button {
+	font-size: 14px;
+	font-family: 'Work Sans';
+	font-weight: 500;
+	padding: 11px 23px;
+	background-color: #FFF;
+	border: none;
+	border-radius: 60px;
+	cursor: pointer;
+}
+
+.modifier-photo {
+	margin-left: 10%;
+	margin-top: 15px;
+}
+
+.modifier-projet {
+	margin-bottom: 2em;
+}
+
+.modifier-photo a,  .modifier-projet a {
+	text-decoration: none;
+	color: #000;
+	font-size:14px;
+	font-weight:400;
+}
+
+.divTitre {
+	display: flex;
+	align-items: center;
+	gap: 30px;
+	justify-content: center;
+}
+
+/********MODALE********/
+.modal {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background:  rgba(0, 0, 0, 0.8);
+	display:flex;
+	align-items: center;
+	justify-content: center;
+}
+.modal-wrapper {
+	background-color: #FFF;
+	width: 650px;
+	max-width: calc(100vw-20px);
+	max-height: calc(100vh-20px);
+	padding: 20px;
+	overflow: auto !important;
+	border-radius: 10px;
+}
+
+#modal1 h3 {
+	font-family: 'Work Sans';
+	font-size: 26px;
+	line-height: 30.5px;
+	font-weight: 400;
+	text-align: center;
+	margin-bottom: 50px;
+}
+
+.close-modal {
+	display: flex;
+    justify-content: flex-end;
+    font-size: 22px;
+    padding: 6px;
+}
+
+.modal-wrapper a {
+	text-decoration: none;
+    color: black;
+}
+
+.projet-galerie-photos {
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+	gap: 10px;
+}
+
+.projet-galerie-photos img {
+	width:100%;
+}

@@ -18,11 +18,7 @@ function ajoutListenerLogin() {
             },
             body: JSON.stringify(connexion)
         })
-        // .then(response => response.json())
-        // .then(data => {
-        //     window.localStorage.setItem("token", data.token);
-        //     window.localStorage.setItem("userId", data.userId);
-        // })
+
         const logResponse = await statutConnexion.json();
         window.localStorage.setItem("token", logResponse.token); //Stockage du token dans le localStorage
         window.localStorage.setItem("userId", logResponse.userId);//Stockage de l'userId dans le localStorage
@@ -33,34 +29,46 @@ function ajoutListenerLogin() {
         //Message d'erreur et redirection
         if (logStatus === 200) {
             // console.log('L\'utilisateur est validé, nous pouvons rediriger la page');
-            window.location.href = '/FrontEnd/index.html'; //redirection vers la homepage 
+            window.location.href = "./index.html"; //redirection vers la homepage 
         } else if (logStatus === 404 || logStatus === 401) {
             // console.log("Utilisateur introuvable ! Merci de vérifier votre adresse email et/ou votre mot de passe")
-            const erreur = document.querySelector("form");
-            const messageErreur = document.createElement("p");
-            messageErreur.innerHTML = `Utilisateur introuvable ! </br> Merci de vérifier votre adresse email et/ou votre mot de passe`;
-            messageErreur.classList.add("message-erreur");
-            erreur.appendChild(messageErreur);
+            messageErreur();
         }
     })
 }
 
 ajoutListenerLogin()
 
-
+function messageErreur() {
+    const erreur = document.querySelector("form");
+    const messageErreur = document.createElement("p");
+    messageErreur.innerText = `Utilisateur introuvable ! Merci de vérifier votre adresse email et/ou votre mot de passe.`;
+    messageErreur.classList.add("message-erreur");
+    erreur.appendChild(messageErreur);
+}
 
 const userId = localStorage.getItem("userId");
 console.log(`l'userId est ${userId}`)
 
-//Bouton Login/logout
+/******** PARTIE CONNEXION/DECONNEXION ********/
 if (userId != null) {
     console.log("L'utilisateur est connecté")
     const btnLog = document.querySelector('.btn-login');
     btnLog.innerText = "logout"
-} 
+}
 
+const token = localStorage.getItem("token");
+console.log(token)
 
-function logout () {
+if (token != undefined) {
+    const btnLog = document.querySelector('.btn-login');
+    btnLog.innerText = "logout"
+} else {
+    const btnLog = document.querySelector('.btn-login');
+    btnLog.innerText = "login"
+}
+
+function logout() {
     const logout = document.querySelector(".btn-login");
     logout.addEventListener("click", async function (event) {
         localStorage.removeItem("userId");
@@ -69,14 +77,13 @@ function logout () {
         const btnLog = document.querySelector('.btn-login');
         btnLog.innerText = "login"
         console.log("L\'utilisateur n'est plus connecté")
-    
     })
 }
 
 logout();
 
 
-/*****Mise en forme erreur de connexion*****/
+/******** ERREUR DE CONNEXION ********/
 let form = document.querySelector("form");
 
 function verifierChamp(balise) {

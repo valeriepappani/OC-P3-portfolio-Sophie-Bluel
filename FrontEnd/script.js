@@ -64,14 +64,13 @@ genererProjet(projet);
 
 /***** Génération des projets suivant les filtres *****/
 //Ajout du listener pour trier les projets par Objets
-const boutonObjets = document.querySelector(".Objets");
 
-boutonObjets.addEventListener("click", function() {
-    const objetsFiltres = projet.filter(function(projet){
+const boutonObjets = document.querySelector(".Objets");
+boutonObjets.addEventListener("click", function () {
+    const objetsFiltres = projet.filter(function (projet) {
         return projet.categoryId === 1;
     })
-    console.log(objetsFiltres)
-    document.querySelector(".gallery").innerHTML="";
+    document.querySelector(".gallery").innerHTML = "";
     genererProjet(objetsFiltres);
 })
 
@@ -79,34 +78,107 @@ boutonObjets.addEventListener("click", function() {
 const boutonAppartements = document.querySelector(".Appartements");
 
 boutonAppartements.addEventListener("click", function () {
-    const appartementsFiltres=projet.filter(function (projet){
+    const appartementsFiltres = projet.filter(function (projet) {
         return projet.categoryId === 2;
     })
-    console.log(appartementsFiltres);
-    document.querySelector(".gallery").innerHTML="";
+    document.querySelector(".gallery").innerHTML = "";
     genererProjet(appartementsFiltres)
 })
 
 //Ajout du listener pour trier les projets par Hotels et Restaurants
 const boutonHotels = document.querySelector(".Hotels");
 
-boutonHotels.addEventListener("click", function() {
-    const hotelsFiltres = projet.filter(function (projet){
+boutonHotels.addEventListener("click", function () {
+    const hotelsFiltres = projet.filter(function (projet) {
         return projet.categoryId === 3;
     })
-    console.log(hotelsFiltres);
-    document.querySelector(".gallery").innerHTML="";
+    document.querySelector(".gallery").innerHTML = "";
     genererProjet(hotelsFiltres)
 })
 
 //Ajout du listener pour faire apparaitre tous les projets
 const projetGlobal = document.querySelector(".Tous");
 
-projetGlobal.addEventListener("click", function() {
-    const tousProjet = projet.filter(function (projet){
+projetGlobal.addEventListener("click", function () {
+    const tousProjet = projet.filter(function (projet) {
         return projet;
     })
-    console.log(tousProjet);
-    document.querySelector(".gallery").innerHTML="";
+    document.querySelector(".gallery").innerHTML = "";
     genererProjet(tousProjet)
 })
+
+
+/******** Partie déconnexion/LOGOUT ********/
+const token = localStorage.getItem("token"); //On récupère le token
+if (token != undefined) {
+    const btnLog = document.querySelector('.btn-login');
+    btnLog.innerText = "logout"
+    btnLog.classList.add("logout");
+}
+
+const logoutHome = document.querySelector(".logout");
+logoutHome.addEventListener("click", async function (event) {
+    localStorage.removeItem("userId");
+    localStorage.removeItem("token");
+    window.location.href = "./login.html"; //redirection vers la page de connexion 
+})
+
+
+/******** Éléments à afficher quans l'utilisateur est connecté ********/
+function elementsConnexion() {
+    const token = localStorage.getItem("token");
+    if (token != undefined) {
+        //Création d'un nouvel element
+        let modeEdition = document.createElement("div");
+        modeEdition.classList.add("divEdition");
+        //Élément de référence
+        let elementReference = document.querySelector("body");
+        // Élément parent
+        let parentDiv = elementReference.parentNode;
+        //Nouvel element avant le body
+        parentDiv.insertBefore(modeEdition, elementReference)
+
+        const pEdition = document.createElement('p');
+        pEdition.innerHTML = `<a href="#"><i class="fa-regular fa-pen-to-square"></i> Mode édition</a>`
+        modeEdition.appendChild(pEdition)
+        const btnEdition = document.createElement('button');
+        btnEdition.innerText = "publier les changements"
+        modeEdition.appendChild(btnEdition)
+
+        const figurePhoto = document.querySelector("figure");
+        const modifierPhoto = document.createElement("p");
+        modifierPhoto.classList.add("modifier-photo");
+        modifierPhoto.innerHTML = `<a href="#"><i class="fa-regular fa-pen-to-square"></i> modifier</a>`
+        figurePhoto.appendChild(modifierPhoto)
+
+        document.querySelector('.categories').style.display = "none"; //Masquer les filtres
+
+        const divTitre = document.querySelector('.divTitre');
+        const modifierProjets = document.createElement('p');
+        modifierProjets.classList.add('modifier-projet');
+        modifierProjets.innerHTML = `<a href="#"><i class="fa-regular fa-pen-to-square"></i> modifier</a>`
+        divTitre.appendChild(modifierProjets)
+
+        /******** MODALE ********/
+        modifierProjets.addEventListener('click', function () {
+            document.querySelector('#modal1').style.display = "flex";
+        })
+
+        const closeModale = document.querySelector('.close-modal');
+        closeModale.addEventListener('click', function () {
+            document.querySelector('#modal1').style.display = "none";
+        })
+
+        const projetGaleriePhotos = document.querySelector('.projet-galerie-photos');
+
+        for (let i = 0; i < projet.length; i++) {
+            const elementProjet = projet[i];
+            const projetImage = document.createElement("img");
+            projetImage.src = elementProjet.imageUrl;
+            projetGaleriePhotos.appendChild(projetImage)
+        }
+    
+    }
+}
+
+elementsConnexion();
