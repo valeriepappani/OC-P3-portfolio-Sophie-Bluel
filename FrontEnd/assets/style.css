@@ -481,12 +481,21 @@ input[type="password"] {
 }
 .modal-wrapper {
 	background-color: #FFF;
-	width: 650px;
-	max-width: calc(100vw-20px);
-	max-height: calc(100vh-20px);
+	width: 630px;
+	max-width: calc(100vw - 20px);
+	max-height: calc(100vh - 20px);
 	padding: 20px;
 	overflow: auto !important;
 	border-radius: 10px;
+	display: flex;
+    flex-direction: column;
+	
+}
+
+.modal-wrapper a {
+	text-decoration: none;
+    color: black;
+	margin-top: 5px;
 }
 
 #modal1 h3 {
@@ -505,17 +514,65 @@ input[type="password"] {
     padding: 6px;
 }
 
-.modal-wrapper a {
-	text-decoration: none;
-    color: black;
-}
-
 .projet-galerie-photos {
 	display: grid;
 	grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
 	gap: 10px;
+	padding-left:100px;
+	padding-right: 100px;
 }
 
 .projet-galerie-photos img {
 	width:100%;
+	height: 105px;
+	object-fit: cover;
+}
+
+.lien-editer {
+	margin-bottom: 15px;
+	display:flex;
+	flex-direction: column;
+	position:relative;
+}
+
+.fa-trash-can {
+	background-color: black;
+	color: white;
+	padding: 4px;
+	border-radius: 3px;
+}
+
+.picto-poubelle-lien {
+	position: absolute;
+	margin-top: 5px;
+	margin-left: 50px;
+}
+
+.separateur {
+    border-top: 1px solid #B3B3B3;
+    margin-left: 100px;
+    margin-right: 100px;
+	margin-top: 50px;
+} 
+
+.btn-ajout-photo-modal {
+	font-family: 'Syne';
+	font-weight: 700;
+	color: white;
+	background-color: #1D6154;
+	margin: 2em auto;
+	text-align: center;
+	border-radius: 60px;
+	border: none;
+	padding: 10px 50px;
+	cursor:pointer;
+}
+
+.lien-supp-gallerie {
+	font-size: 14px;
+	font-family: 'Syne';
+	font-weight: 400;
+	text-align:center;
+	color: #D65353 !important;
+	margin-bottom: 50px;
 }

@@ -171,13 +171,52 @@ function elementsConnexion() {
 
         const projetGaleriePhotos = document.querySelector('.projet-galerie-photos');
 
+        //Boucle pour récupérer les projets
         for (let i = 0; i < projet.length; i++) {
+            //Création d'une nouvelle div contenant l'image et le lien pour éditer
+            const containerImageProjet = document.createElement("div");
+            containerImageProjet.classList.add('lien-editer');
+            projetGaleriePhotos.appendChild(containerImageProjet);
+            
+            //Récupération des projets via l'API
             const elementProjet = projet[i];
             const projetImage = document.createElement("img");
             projetImage.src = elementProjet.imageUrl;
-            projetGaleriePhotos.appendChild(projetImage)
+            containerImageProjet.appendChild(projetImage)
+
+            //Création de l'icone "poubelle"
+            const pictoPoubelle = document.createElement("a");
+            pictoPoubelle.href="#";
+            pictoPoubelle.classList="picto-poubelle-lien"
+            pictoPoubelle.innerHTML = `<i class="fa-solid fa-trash-can"></i>`;
+            containerImageProjet.appendChild(pictoPoubelle)
+
+
+            //Création du lien "editer" sour l'image
+            const lienEditer = document.createElement("a");
+            lienEditer.href="#"
+            lienEditer.innerText="éditer"
+            containerImageProjet.appendChild(lienEditer)
         }
-    
+
+        //Création séparateur
+        const modalWrapper = document.querySelector('.modal-wrapper')
+        const separateur = document.createElement("div");
+        separateur.classList.add("separateur");
+        modalWrapper.appendChild(separateur)
+
+        //Création du bouton pour ajouter une photo
+        const ajoutPhoto = document.createElement('button');
+        ajoutPhoto.classList.add('btn-ajout-photo-modal');
+        ajoutPhoto.innerText = "Ajouter une photo";
+        modalWrapper.appendChild(ajoutPhoto)
+
+        //Création du lien pour supprimer la gallerie
+        const lienSuppGallerie = document.createElement('a');
+        lienSuppGallerie.classList.add('lien-supp-gallerie');
+        lienSuppGallerie.href="#"
+        lienSuppGallerie.innerText = "Supprimer la gallerie";
+        modalWrapper.appendChild(lienSuppGallerie)
     }
 }
 
