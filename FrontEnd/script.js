@@ -114,110 +114,189 @@ if (token != undefined) {
     const btnLog = document.querySelector('.btn-login');
     btnLog.innerText = "logout"
     btnLog.classList.add("logout");
+
+    const logoutHome = document.querySelector(".logout");
+    logoutHome.addEventListener("click", function () {
+        localStorage.removeItem("userId");
+        localStorage.removeItem("token");
+        window.location.href = "./login.html"; //redirection vers la page de connexion 
+    })
 }
 
-const logoutHome = document.querySelector(".logout");
-logoutHome.addEventListener("click", async function (event) {
-    localStorage.removeItem("userId");
-    localStorage.removeItem("token");
-    window.location.href = "./login.html"; //redirection vers la page de connexion 
+/******** Éléments à afficher quans l'utilisateur est connecté ********/
+if (token != undefined) {
+
+    //Création d'une nouvelle div - "Mode édition des projets" - Haut de la page
+    let modeEdition = document.createElement("div");
+    modeEdition.classList.add("divEdition");
+    let elementReference = document.querySelector("body");//Élément de référence
+    let parentDiv = elementReference.parentNode; // Élément parent
+    parentDiv.insertBefore(modeEdition, elementReference)//Nouvel element avant le body
+
+    const pEdition = document.createElement('p');
+    pEdition.innerHTML = `<a href="#"><i class="fa-regular fa-pen-to-square"></i> Mode édition</a>`
+    modeEdition.appendChild(pEdition)
+
+    const btnEdition = document.createElement('button');
+    btnEdition.innerText = "publier les changements"
+    modeEdition.appendChild(btnEdition)
+
+    //Modifier la photo de l'architecte
+    const figurePhoto = document.querySelector("figure");
+    const modifierPhoto = document.createElement("p");
+    modifierPhoto.classList.add("modifier-photo");
+    modifierPhoto.innerHTML = `<a href="#"><i class="fa-regular fa-pen-to-square"></i> modifier</a>`
+    figurePhoto.appendChild(modifierPhoto)
+
+    document.querySelector('.categories').style.display = "none"; //Masquer les filtres
+
+    //Modifier les projets
+    const divTitre = document.querySelector('.divTitre');
+    const modifierProjets = document.createElement('p');
+    modifierProjets.classList.add('modifier-projet');
+    modifierProjets.innerHTML = `<a href="#modal1"><i class="fa-regular fa-pen-to-square"></i> modifier</a>`
+    divTitre.appendChild(modifierProjets)
+}
+
+/******** MODALE ********/
+
+//Création séparateur
+const modalWrapper = document.querySelector('.modal-wrapper')
+const separateur = document.createElement("div");
+separateur.classList.add("separateur");
+modalWrapper.appendChild(separateur)
+
+//Création du bouton pour ajouter une photo
+const ajoutPhoto = document.createElement('button');
+ajoutPhoto.classList.add('btn-ajout-photo-modal');
+ajoutPhoto.innerText = "Ajouter une photo";
+modalWrapper.appendChild(ajoutPhoto)
+
+//Création du lien pour supprimer la gallerie
+const lienSuppGallerie = document.createElement('a');
+lienSuppGallerie.classList.add('lien-supp-gallerie');
+lienSuppGallerie.href = "#"
+lienSuppGallerie.innerText = "Supprimer la gallerie";
+modalWrapper.appendChild(lienSuppGallerie)
+
+
+/******** AFFICHAGE MODAL ********/
+let modal = null;
+
+const openModal = function (event) {
+    event.preventDefault();
+    modal = document.querySelector(event.target.getAttribute('href'));
+    modal.style.display = null;
+    modal.setAttribute('aria-hidden', 'false');
+    modal.setAttribute('aria-modal', 'true');
+    modal.addEventListener('click', closeModal);
+    modal.querySelector('.js-modal-close').addEventListener('click', closeModal)
+    modal.querySelector('.js-modal-stop').addEventListener('click', stopPropagation)
+}
+
+const closeModal = function (event) {
+    if (modal === null) return
+    event.preventDefault();
+    modal.style.display = 'none';
+    modal.setAttribute('aria-hidden', 'true');
+    modal.setAttribute('aria-modal', 'false');
+    modal.removeEventListener('click', closeModal);
+    modal.querySelector('.js-modal-close').removeEventListener('click', closeModal)
+    modal.querySelector('.js-modal-stop').removeEventListener('click', stopPropagation)
+    modal = null;
+}
+
+const stopPropagation = function (event) {
+    event.stopPropagation();
+}
+
+const modifierProjet = document.querySelector(".modifier-projet");
+modifierProjet.addEventListener('click', openModal);
+
+window.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape' || event.key === 'Esc') {
+        closeModal(event);
+    };
 })
 
 
-/******** Éléments à afficher quans l'utilisateur est connecté ********/
-function elementsConnexion() {
-    const token = localStorage.getItem("token");
-    if (token != undefined) {
-        //Création d'un nouvel element
-        let modeEdition = document.createElement("div");
-        modeEdition.classList.add("divEdition");
-        //Élément de référence
-        let elementReference = document.querySelector("body");
-        // Élément parent
-        let parentDiv = elementReference.parentNode;
-        //Nouvel element avant le body
-        parentDiv.insertBefore(modeEdition, elementReference)
-
-        const pEdition = document.createElement('p');
-        pEdition.innerHTML = `<a href="#"><i class="fa-regular fa-pen-to-square"></i> Mode édition</a>`
-        modeEdition.appendChild(pEdition)
-        const btnEdition = document.createElement('button');
-        btnEdition.innerText = "publier les changements"
-        modeEdition.appendChild(btnEdition)
-
-        const figurePhoto = document.querySelector("figure");
-        const modifierPhoto = document.createElement("p");
-        modifierPhoto.classList.add("modifier-photo");
-        modifierPhoto.innerHTML = `<a href="#"><i class="fa-regular fa-pen-to-square"></i> modifier</a>`
-        figurePhoto.appendChild(modifierPhoto)
-
-        document.querySelector('.categories').style.display = "none"; //Masquer les filtres
-
-        const divTitre = document.querySelector('.divTitre');
-        const modifierProjets = document.createElement('p');
-        modifierProjets.classList.add('modifier-projet');
-        modifierProjets.innerHTML = `<a href="#"><i class="fa-regular fa-pen-to-square"></i> modifier</a>`
-        divTitre.appendChild(modifierProjets)
-
-        /******** MODALE ********/
-        modifierProjets.addEventListener('click', function () {
-            document.querySelector('#modal1').style.display = "flex";
-        })
-
-        const closeModale = document.querySelector('.close-modal');
-        closeModale.addEventListener('click', function () {
-            document.querySelector('#modal1').style.display = "none";
-        })
-
+/******** GÉNARATION DES PROJET DANS LA MODAL ********/
+const genererProjetModal = function () {
+    for (let i = 0; i < projet.length; i++) {
+        //Création d'une nouvelle div contenant l'image et le lien pour éditer
+        const containerImageProjet = document.createElement("div");
+        containerImageProjet.classList.add('lien-editer');
         const projetGaleriePhotos = document.querySelector('.projet-galerie-photos');
+        projetGaleriePhotos.appendChild(containerImageProjet);
 
-        //Boucle pour récupérer les projets
-        for (let i = 0; i < projet.length; i++) {
-            //Création d'une nouvelle div contenant l'image et le lien pour éditer
-            const containerImageProjet = document.createElement("div");
-            containerImageProjet.classList.add('lien-editer');
-            projetGaleriePhotos.appendChild(containerImageProjet);
-            
-            //Récupération des projets via l'API
-            const elementProjet = projet[i];
-            const projetImage = document.createElement("img");
-            projetImage.src = elementProjet.imageUrl;
-            containerImageProjet.appendChild(projetImage)
+        //Récupération des projets via l'API
+        const elementProjet = projet[i];
+        const projetImage = document.createElement("img");
+        projetImage.src = elementProjet.imageUrl;
+        projetImage.alt = elementProjet.title;
+        projetImage.setAttribute("data", elementProjet.id)
+        containerImageProjet.appendChild(projetImage)
 
-            //Création de l'icone "poubelle"
-            const pictoPoubelle = document.createElement("a");
-            pictoPoubelle.href="#";
-            pictoPoubelle.classList="picto-poubelle-lien"
-            pictoPoubelle.innerHTML = `<i class="fa-solid fa-trash-can"></i>`;
-            containerImageProjet.appendChild(pictoPoubelle)
+        //Création de l'icone "poubelle"
+        const pictoPoubelle = document.createElement("a");
+        pictoPoubelle.href = "#";
+        pictoPoubelle.classList = "picto-poubelle-lien"
+        pictoPoubelle.innerHTML = `<i class="fa-solid fa-trash-can"></i>`;
+        pictoPoubelle.setAttribute("data-id", projetImage.setAttribute = ("data", elementProjet.id))
+        containerImageProjet.appendChild(pictoPoubelle)
 
-
-            //Création du lien "editer" sour l'image
-            const lienEditer = document.createElement("a");
-            lienEditer.href="#"
-            lienEditer.innerText="éditer"
-            containerImageProjet.appendChild(lienEditer)
-        }
-
-        //Création séparateur
-        const modalWrapper = document.querySelector('.modal-wrapper')
-        const separateur = document.createElement("div");
-        separateur.classList.add("separateur");
-        modalWrapper.appendChild(separateur)
-
-        //Création du bouton pour ajouter une photo
-        const ajoutPhoto = document.createElement('button');
-        ajoutPhoto.classList.add('btn-ajout-photo-modal');
-        ajoutPhoto.innerText = "Ajouter une photo";
-        modalWrapper.appendChild(ajoutPhoto)
-
-        //Création du lien pour supprimer la gallerie
-        const lienSuppGallerie = document.createElement('a');
-        lienSuppGallerie.classList.add('lien-supp-gallerie');
-        lienSuppGallerie.href="#"
-        lienSuppGallerie.innerText = "Supprimer la gallerie";
-        modalWrapper.appendChild(lienSuppGallerie)
+        //Création du lien "editer" sour l'image
+        const lienEditer = document.createElement("a");
+        lienEditer.href = "#"
+        lienEditer.innerText = "éditer"
+        containerImageProjet.appendChild(lienEditer)
     }
 }
 
-elementsConnexion();
+genererProjetModal();
+
+
+/******** SUPPRESSION D'UN PROJET ********/
+function supprimerProjet() {
+    let removeProjects = document.querySelectorAll('.picto-poubelle-lien');
+    removeProjects.forEach(project => {
+        project.addEventListener("click", function (event) {
+            event.preventDefault()
+
+            const recupId = project.dataset.id;
+            console.log(recupId)
+
+            // fetch(`http://localhost:5678/api/works/${recupId}`, {
+            //     method: 'DELETE',
+            //     headers: {
+            //         'Accept': '*/*',
+            //         'Content-Type': 'application/json',
+            //         'Authorization': `Bearer ${token}`,
+            //     },
+            //     body: null
+            // }) 
+
+            const gallerieModal = document.querySelector('.projet-galerie-photos').innerHTML = "";
+            console.log(gallerieModal);
+            genererProjetModal(project);
+        })
+    })
+}
+
+supprimerProjet();
+
+
+/*******MODAL 2 : AJOUT PHOTO ********/
+const ajoutPhotoModal= document.querySelector('.btn-ajout-photo-modal');
+console.log(ajoutPhotoModal)
+
+
+const sectionModal = document.querySelector('#modals')
+console.log(sectionModal)
+const modalAjout = document.createElement("aside");
+modalAjout.classList.add('modal-2');
+sectionModal.appendChild(modalAjout);
+
+ajoutPhotoModal.addEventListener('click', function () {
+    console.log(sectionModal)
+})

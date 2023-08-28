@@ -24,33 +24,25 @@ function ajoutListenerLogin() {
         window.localStorage.setItem("userId", logResponse.userId);//Stockage de l'userId dans le localStorage
 
         const logStatus = statutConnexion.status;
-        console.log(`le statut de connexion est ${logStatus}`)
+        // console.log(`le statut de connexion est ${logStatus}`)
 
         //Message d'erreur et redirection
         if (logStatus === 200) {
-            // console.log('L\'utilisateur est validé, nous pouvons rediriger la page');
             window.location.href = "./index.html"; //redirection vers la homepage 
         } else if (logStatus === 404 || logStatus === 401) {
-            // console.log("Utilisateur introuvable ! Merci de vérifier votre adresse email et/ou votre mot de passe")
-            messageErreur();
+            if (document.querySelector(".message-erreur")=== null) {
+                messageErreur();
+            }   
         }
     })
 }
 
 ajoutListenerLogin()
 
-function messageErreur() {
-    const erreur = document.querySelector("form");
-    const messageErreur = document.createElement("p");
-    messageErreur.innerText = `Utilisateur introuvable ! Merci de vérifier votre adresse email et/ou votre mot de passe.`;
-    messageErreur.classList.add("message-erreur");
-    erreur.appendChild(messageErreur);
-}
-
-const userId = localStorage.getItem("userId");
-console.log(`l'userId est ${userId}`)
 
 /******** PARTIE CONNEXION/DECONNEXION ********/
+const userId = localStorage.getItem("userId");
+
 if (userId != null) {
     console.log("L'utilisateur est connecté")
     const btnLog = document.querySelector('.btn-login');
@@ -58,7 +50,6 @@ if (userId != null) {
 }
 
 const token = localStorage.getItem("token");
-console.log(token)
 
 if (token != undefined) {
     const btnLog = document.querySelector('.btn-login');
@@ -70,10 +61,9 @@ if (token != undefined) {
 
 function logout() {
     const logout = document.querySelector(".btn-login");
-    logout.addEventListener("click", async function (event) {
+    logout.addEventListener("click", async function () {
         localStorage.removeItem("userId");
         localStorage.removeItem("token");
-        console.log(localStorage)
         const btnLog = document.querySelector('.btn-login');
         btnLog.innerText = "login"
         console.log("L\'utilisateur n'est plus connecté")
@@ -84,6 +74,16 @@ logout();
 
 
 /******** ERREUR DE CONNEXION ********/
+function messageErreur() {
+    const erreur = document.querySelector("form");
+    //Si p existe déjà, alors on laisse p afficher, sinon création du paragraphe d'erreur
+    const messageErreur = document.createElement("p");
+    messageErreur.innerText = `Utilisateur introuvable ! Merci de vérifier votre adresse email et/ou votre mot de passe.`;
+    messageErreur.classList.add("message-erreur");
+    erreur.appendChild(messageErreur);
+}
+
+
 let form = document.querySelector("form");
 
 function verifierChamp(balise) {

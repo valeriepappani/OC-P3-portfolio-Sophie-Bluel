@@ -3,87 +3,12 @@
    License: none (public domain)
 */
 
-html,
-body,
-div,
-span,
-applet,
-object,
-iframe,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p,
-blockquote,
-pre,
-a,
-abbr,
-acronym,
-address,
-big,
-cite,
-code,
-del,
-dfn,
-em,
-img,
-ins,
-kbd,
-q,
-s,
-samp,
-small,
-strike,
-strong,
-sub,
-sup,
-tt,
-var,
-b,
-u,
-i,
-center,
-dl,
-dt,
-dd,
-ol,
-ul,
-li,
-fieldset,
-form,
-label,
-legend,
-table,
-caption,
-tbody,
-tfoot,
-thead,
-tr,
-th,
-td,
-article,
-aside,
-canvas,
-details,
-embed,
-figure,
-figcaption,
-footer,
-header,
-hgroup,
-menu,
-nav,
-output,
-ruby,
-section,
-summary,
-time,
-mark,
-audio,
-video {
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary, time, mark, audio, video {
 	margin: 0;
 	padding: 0;
 	border: 0;
@@ -92,18 +17,10 @@ video {
 	vertical-align: baseline;
 }
 
+
 /* HTML5 display-role reset for older browsers */
-article,
-aside,
-details,
-figcaption,
-figure,
-footer,
-header,
-hgroup,
-menu,
-nav,
-section {
+article, aside, details, figcaption, figure, footer, header,
+hgroup, menu, nav, section {
 	display: block;
 }
 
@@ -121,10 +38,7 @@ q {
 	quotes: none;
 }
 
-blockquote:before,
-blockquote:after,
-q:before,
-q:after {
+blockquote:before, blockquote:after, q:before, q:after {
 	content: '';
 	content: none;
 }
@@ -478,7 +392,9 @@ input[type="password"] {
 	display:flex;
 	align-items: center;
 	justify-content: center;
+	animation: fadeIn .3s both;
 }
+
 .modal-wrapper {
 	background-color: #FFF;
 	width: 630px;
@@ -489,13 +405,20 @@ input[type="password"] {
 	border-radius: 10px;
 	display: flex;
     flex-direction: column;
-	
+	animation: slideFropTop .5s both;
 }
 
 .modal-wrapper a {
 	text-decoration: none;
     color: black;
-	margin-top: 5px;
+}
+
+.modal[aria-hidden="true"] {
+	animation-name : fadeOut;
+}
+
+.modal[aria-hidden="true"] .modal-wrapper {
+	animation-name: slideToBottom;
 }
 
 #modal1 h3 {
@@ -507,7 +430,7 @@ input[type="password"] {
 	margin-bottom: 50px;
 }
 
-.close-modal {
+.modal-wrapper .js-modal-close {
 	display: flex;
     justify-content: flex-end;
     font-size: 22px;
@@ -526,6 +449,7 @@ input[type="password"] {
 	width:100%;
 	height: 105px;
 	object-fit: cover;
+	margin-bottom: 5px;
 }
 
 .lien-editer {
@@ -544,8 +468,8 @@ input[type="password"] {
 
 .picto-poubelle-lien {
 	position: absolute;
-	margin-top: 5px;
-	margin-left: 50px;
+	top: 5px;
+	right: 5px;
 }
 
 .separateur {
@@ -575,4 +499,25 @@ input[type="password"] {
 	text-align:center;
 	color: #D65353 !important;
 	margin-bottom: 50px;
+}
+
+/*Animation modal*/
+@keyframes fadeIn {
+	from {opacity: 0};
+	to {opacity: 1};
+}
+
+@keyframes slideFropTop {
+	from {transform: translateY(-50px)};
+	to {transform: translateY(0px)};
+}
+
+@keyframes fadeOut {
+	from {opacity: 1};
+	to {opacity: 0};
+}
+
+@keyframes slideToBottom {
+	from {transform: translateY(0px)};
+	to {transform: translateY(-50px)};
 }
