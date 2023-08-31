@@ -80,7 +80,6 @@ h1 {
 	display: flex;
 	flex-direction: column;
 	font-family: 'Syne', sans-serif;
-	;
 	font-size: 22px;
 	font-weight: 800;
 	color: #B1663C;
@@ -421,7 +420,7 @@ input[type="password"] {
 	animation-name: slideToBottom;
 }
 
-#modal1 h3 {
+#modal1 h3, #modal2 h3 {
 	font-family: 'Work Sans';
 	font-size: 26px;
 	line-height: 30.5px;
@@ -502,7 +501,7 @@ input[type="password"] {
 }
 
 /*Animation modal*/
-@keyframes fadeIn {
+/* @keyframes fadeIn {
 	from {opacity: 0};
 	to {opacity: 1};
 }
@@ -520,4 +519,96 @@ input[type="password"] {
 @keyframes slideToBottom {
 	from {transform: translateY(0px)};
 	to {transform: translateY(-50px)};
+} */
+
+/*MODALE 2 */
+.picto-nav-modal {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+	padding: 20px 25px;
+}
+
+.fa-arrow-right, .fa-xmark  {
+	cursor:pointer;
+}
+
+.container-nouvelle-photo {
+	display:flex;
+	flex-direction: column;
+	width: 420px;
+	border-radius: 3px;
+	background-color: #E8F1F6;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.picto-visuel {
+	font-size:60px;
+	color: #B9C5CC;
+	padding: 10px;
+	margin: 15px auto;
+}
+
+.input-file {
+	font-family: 'Work Sans';
+	font-size: 14px;
+	font-weight: 500;
+	color: #306685;
+	padding: 10px 20px;
+	background-color: #CBD6DC;
+	border-radius: 50px;
+	width: 180px;
+	text-align: center;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 10px;
+}
+
+.container-nouvelle-photo p {
+	font-family: 'Work Sans';
+	font-size: 10px;
+	font-weight: 400;
+	text-align: center;
+	margin-bottom: 20px;
+	color: #444444;
+}
+
+.container-new-photo {
+	display: flex;
+	flex-direction: column;
+	width: 420px;
+	margin: 0 auto;
+}
+
+.container-new-photo label {
+margin-top:30px;
+}
+
+.container-new-photo input, .container-new-photo select {
+	height: 50px;
+	border: none;
+	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+	margin-top: 10px;
+}
+
+.btn-valider-photo {
+	padding: 10px 50px;
+	width: 150px;
+	margin : 20px auto;
+	font-family: 'Syne', sans-serif;
+	font-size: 14px;
+	font-weight: 700;
+	color: #FFF;
+	border-radius: 60px;
+	background-color: #A7A7A7;
+	border: none;
+}
+
+#file-preview {
+	height: auto;
+	width: 170px;
+	object-fit: cover; 
+	margin-left: auto;
+	margin-right: auto;
 }

@@ -238,8 +238,8 @@ const genererProjetModal = function () {
         containerImageProjet.appendChild(projetImage)
 
         //Création de l'icone "poubelle"
-        const pictoPoubelle = document.createElement("a");
-        pictoPoubelle.href = "#";
+        const pictoPoubelle = document.createElement("div");
+        // pictoPoubelle.href = "#";
         pictoPoubelle.classList = "picto-poubelle-lien"
         pictoPoubelle.innerHTML = `<i class="fa-solid fa-trash-can"></i>`;
         pictoPoubelle.setAttribute("data-id", projetImage.setAttribute = ("data", elementProjet.id))
@@ -255,7 +255,6 @@ const genererProjetModal = function () {
 
 genererProjetModal();
 
-
 /******** SUPPRESSION D'UN PROJET ********/
 function supprimerProjet() {
     let removeProjects = document.querySelectorAll('.picto-poubelle-lien');
@@ -266,19 +265,23 @@ function supprimerProjet() {
             const recupId = project.dataset.id;
             console.log(recupId)
 
-            // fetch(`http://localhost:5678/api/works/${recupId}`, {
-            //     method: 'DELETE',
-            //     headers: {
-            //         'Accept': '*/*',
-            //         'Content-Type': 'application/json',
-            //         'Authorization': `Bearer ${token}`,
-            //     },
-            //     body: null
-            // }) 
+            fetch(`http://localhost:5678/api/works/${recupId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Accept': '*/*',
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: null
+            }) 
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+            })
 
-            const gallerieModal = document.querySelector('.projet-galerie-photos').innerHTML = "";
-            console.log(gallerieModal);
-            genererProjetModal(project);
+//             const gallerieModal = document.querySelector('.projet-galerie-photos').innerHTML = "";
+//             console.log(gallerieModal);
+//             genererProjetModal(project);
         })
     })
 }
@@ -288,15 +291,142 @@ supprimerProjet();
 
 /*******MODAL 2 : AJOUT PHOTO ********/
 const ajoutPhotoModal= document.querySelector('.btn-ajout-photo-modal');
-console.log(ajoutPhotoModal)
+
+ajoutPhotoModal.addEventListener('click', function(event){
+    event.preventDefault()
+
+    const modal2 = document.querySelector('#modal2');
+    modal2.style.display=null;
+
+    const modal1 = document.querySelector('#modal1');
+    modal1.style.display='none';
+})
+
+const sectionModals = document.querySelector('#modals');
+
+const modal2 = document.createElement('aside');
+modal2.setAttribute('id', 'modal2');
+modal2.setAttribute('class', 'modal');
+modal2.setAttribute('aria-hidden', 'true');
+modal2.setAttribute('role', 'dialog');
+modal2.setAttribute('aria-modal', 'false');
+modal2.setAttribute('aria-labelleby', 'titre-modal2');
+modal2.style.display="none"
+sectionModals.appendChild(modal2);
+
+modal2.innerHTML = 
+`<div class='modal-wrapper js-modal-stop wrapper-modal-2'>
+    <div class="picto-nav-modal">
+        <i class="fa-solid fa-arrow-right fa-rotate-180"></i>
+        <i class="fa-solid fa-xmark js-modal-close test"></i>
+    </div>
+    <h3 id="titre-modale2">Ajout Photo</h3>
+    <div class="container-nouvelle-photo">
+        <i class="fa-regular fa-image picto-visuel"></i>
+        <img src="#" alt="Aperçu de l'image téléchargée" id="file-preview" style="display:none;">
+        <input type="file" name="file" id="file-upload" accept="image/*">
+        <label for="file" class="input-file">+ Ajout photo</label>
+        <p>jpg, png : 4mo max</p>
+    </div>
+    <form class="container-new-photo" method="post" >
+        <label for="titre-projet">Titre</label>
+        <input type="text" name="titreProjet" id="titreProjet">
+        <label for="categories-projet">Catégorie</label>
+        <select name="categoriesProjet" id="categoriesProjet">
+        </select>
+        <div class="separateur"></div>
+        <input type="submit" value="Valider" class="btn-valider-photo"/>
+    </form>
+</div>`;
 
 
-const sectionModal = document.querySelector('#modals')
-console.log(sectionModal)
-const modalAjout = document.createElement("aside");
-modalAjout.classList.add('modal-2');
-sectionModal.appendChild(modalAjout);
+/********Aperçu de l'image a télécharger********/
+const input = document.getElementById('file-upload');
+const previewPhoto = function () {
+    const file = input.files;
+    if (file) {
+        const fileReader = new FileReader();
+        const preview = document.querySelector('#file-preview');
+        preview.style.display=null;
+        const pictoVisuel = document.querySelector('.picto-visuel');
+        pictoVisuel.style.display="none";
+        input.style.display="none";
+        const inputFile = document.querySelector('.input-file');
+        inputFile.style.display="none";
+        const inputParagraph = document.querySelector('.container-nouvelle-photo p');
+        inputParagraph.style.display="none";
 
-ajoutPhotoModal.addEventListener('click', function () {
-    console.log(sectionModal)
+        fileReader.onload = function (event) {
+            preview.setAttribute('src', event.target.result);
+        }
+        fileReader.readAsDataURL(file[0]);
+    }
+}
+input.addEventListener("change", previewPhoto);
+
+
+const pictoFleche = document.querySelector('.fa-arrow-right');
+pictoFleche.addEventListener('click', function(event){
+    event.preventDefault()
+
+    const modal2 = document.querySelector('#modal2');
+    modal2.style.display='none';
+
+    const modal1 = document.querySelector('#modal1');
+    modal1.style.display=null;
+})
+
+const closeModal2 = document.querySelector('.test');
+closeModal2.addEventListener('click', function(event){
+    event.preventDefault();
+    const modalClose = document.querySelector('#modal2');
+    modalClose.style.display = 'none';
+    modalClose.setAttribute('aria-hidden', 'true');
+    modalClose.setAttribute('aria-modal', 'false');
+    modalClose.removeEventListener('click', closeModal);
+    modalClose.querySelector('.js-modal-close').removeEventListener('click', closeModal)
+    modalClose.querySelector('.js-modal-stop').removeEventListener('click', stopPropagation)
+})
+
+/********Récupérer les catégories pour choix ajout projet ********/
+const select = document.querySelector('select');
+
+for (let i = 0; i < categories.length; i++) {
+    const elementCategories = categories[i];
+
+    const optionCategories = document.createElement("option");
+    optionCategories.innerText = elementCategories.name;
+
+    select.appendChild(optionCategories)
+}
+
+/******** Récupération des données d'ajout de l'image ********/
+const containerNewPhoto = document.querySelector('.container-new-photo');
+
+containerNewPhoto.addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    const formData = new FormData(containerNewPhoto);
+    // const titreImg = formData.get('titreProjet', titreProjet);
+    // const catagorieImg = formData.get('categoriesProjet', categoriesProjet);
+    // const test = document.querySelector('#file-preview');
+    // console.log(titreImg);
+    // console.log(catagorieImg);
+    // console.log(test.src)
+
+    const infosImg = {
+        title: formData.get('titreProjet', titreProjet),
+        categorieId: formData.get('categoriesProjet', categoriesProjet),
+        imageUrl: document.querySelector('#file-preview').value
+    };
+
+        fetch('http://localhost:5678/api/works', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify(infosImg)
+    })
 })
