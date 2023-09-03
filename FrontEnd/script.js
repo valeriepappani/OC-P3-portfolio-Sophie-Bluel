@@ -239,7 +239,6 @@ const genererProjetModal = function () {
 
         //Création de l'icone "poubelle"
         const pictoPoubelle = document.createElement("div");
-        // pictoPoubelle.href = "#";
         pictoPoubelle.classList = "picto-poubelle-lien"
         pictoPoubelle.innerHTML = `<i class="fa-solid fa-trash-can"></i>`;
         pictoPoubelle.setAttribute("data-id", projetImage.setAttribute = ("data", elementProjet.id))
@@ -263,25 +262,20 @@ function supprimerProjet() {
             event.preventDefault()
 
             const recupId = project.dataset.id;
-            console.log(recupId)
 
             fetch(`http://localhost:5678/api/works/${recupId}`, {
                 method: 'DELETE',
                 headers: {
                     'Accept': '*/*',
-                    'Content-Type': 'application/json',
+                    // 'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`,
                 },
                 body: null
             }) 
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
-            })
 
-//             const gallerieModal = document.querySelector('.projet-galerie-photos').innerHTML = "";
-//             console.log(gallerieModal);
-//             genererProjetModal(project);
+            const gallerieModal = document.querySelector('.projet-galerie-photos');
+            gallerieModal.innerHTML = "";
+            genererProjetModal(projet);
         })
     })
 }
@@ -325,13 +319,13 @@ modal2.innerHTML =
         <i class="fa-regular fa-image picto-visuel"></i>
         <img src="#" alt="Aperçu de l'image téléchargée" id="file-preview" style="display:none;">
         <input type="file" name="file" id="file-upload" accept="image/*">
-        <label for="file" class="input-file">+ Ajout photo</label>
+        <label for="file-upload" class="input-file">+ Ajout photo</label>
         <p>jpg, png : 4mo max</p>
     </div>
     <form class="container-new-photo" method="post" >
-        <label for="titre-projet">Titre</label>
+        <label for="titreProjet">Titre</label>
         <input type="text" name="titreProjet" id="titreProjet">
-        <label for="categories-projet">Catégorie</label>
+        <label for="categoriesProjet">Catégorie</label>
         <select name="categoriesProjet" id="categoriesProjet">
         </select>
         <div class="separateur"></div>
@@ -395,38 +389,38 @@ for (let i = 0; i < categories.length; i++) {
     const elementCategories = categories[i];
 
     const optionCategories = document.createElement("option");
+    optionCategories.setAttribute('value', elementCategories.id)
     optionCategories.innerText = elementCategories.name;
-
+    
     select.appendChild(optionCategories)
 }
 
 /******** Récupération des données d'ajout de l'image ********/
 const containerNewPhoto = document.querySelector('.container-new-photo');
 
-containerNewPhoto.addEventListener('submit', function (event) {
+containerNewPhoto.addEventListener('submit', function(event) {
     event.preventDefault();
 
-    const formData = new FormData(containerNewPhoto);
-    // const titreImg = formData.get('titreProjet', titreProjet);
-    // const catagorieImg = formData.get('categoriesProjet', categoriesProjet);
-    // const test = document.querySelector('#file-preview');
-    // console.log(titreImg);
-    // console.log(catagorieImg);
-    // console.log(test.src)
+    const valueTitre = document.querySelector('#titreProjet').value;
+    const valueCategories = document.querySelector('#categoriesProjet').value;
+    parseInt(valueCategories);
 
-    const infosImg = {
-        title: formData.get('titreProjet', titreProjet),
-        categorieId: formData.get('categoriesProjet', categoriesProjet),
-        imageUrl: document.querySelector('#file-preview').value
-    };
+    const formData = new FormData();
+    formData.append("image", document.querySelector('#file-upload').files[0])
+    formData.append("title", valueTitre)
+    formData.append("category", valueCategories)
 
         fetch('http://localhost:5678/api/works', {
         method: 'POST',
         headers: {
             'Accept': 'application/json',
-            'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify(infosImg)
+        body: formData
     })
+
+    const gallerieModal = document.querySelector('.projet-galerie-photos');
+    gallerieModal.innerHTML = "";
+    // console.log(gallerieModal);
+    genererProjetModal(projet);
 })
