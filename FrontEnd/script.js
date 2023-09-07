@@ -43,6 +43,7 @@ function genererProjet(projet) {
         const elementProjet = projet[i]; //On récupère les données des projets via le JSON
         // Création des balises
         const figureProjet = document.createElement("figure")
+        figureProjet.setAttribute('id', `element${elementProjet.id}`);
 
         const imageProjet = document.createElement("img");
         imageProjet.src = elementProjet.imageUrl;
@@ -64,7 +65,6 @@ genererProjet(projet);
 
 /***** Génération des projets suivant les filtres *****/
 //Ajout du listener pour trier les projets par Objets
-
 const boutonObjets = document.querySelector(".Objets");
 boutonObjets.addEventListener("click", function () {
     const objetsFiltres = projet.filter(function (projet) {
@@ -175,9 +175,9 @@ modalWrapper.appendChild(ajoutPhoto)
 //Création du lien pour supprimer la gallerie
 const lienSuppGallerie = document.createElement('a');
 lienSuppGallerie.classList.add('lien-supp-gallerie');
-lienSuppGallerie.href = "#"
+lienSuppGallerie.href = "#",
 lienSuppGallerie.innerText = "Supprimer la gallerie";
-modalWrapper.appendChild(lienSuppGallerie)
+modalWrapper.appendChild(lienSuppGallerie);
 
 
 /******** AFFICHAGE MODAL ********/
@@ -224,13 +224,15 @@ window.addEventListener('keydown', function (event) {
 const genererProjetModal = function () {
     for (let i = 0; i < projet.length; i++) {
         //Création d'une nouvelle div contenant l'image et le lien pour éditer
+        const elementProjet = projet[i];
+
         const containerImageProjet = document.createElement("div");
         containerImageProjet.classList.add('lien-editer');
+        containerImageProjet.setAttribute("id", elementProjet.id)
         const projetGaleriePhotos = document.querySelector('.projet-galerie-photos');
         projetGaleriePhotos.appendChild(containerImageProjet);
 
         //Récupération des projets via l'API
-        const elementProjet = projet[i];
         const projetImage = document.createElement("img");
         projetImage.src = elementProjet.imageUrl;
         projetImage.alt = elementProjet.title;
@@ -246,9 +248,9 @@ const genererProjetModal = function () {
 
         //Création du lien "editer" sour l'image
         const lienEditer = document.createElement("a");
-        lienEditer.href = "#"
-        lienEditer.innerText = "éditer"
-        containerImageProjet.appendChild(lienEditer)
+        // lienEditer.href = "#"
+        lienEditer.innerText = "éditer";
+        containerImageProjet.appendChild(lienEditer);
     }
 }
 
@@ -271,11 +273,16 @@ function supprimerProjet() {
                     'Authorization': `Bearer ${token}`,
                 },
                 body: null
-            }) 
+            })
 
-            const gallerieModal = document.querySelector('.projet-galerie-photos');
-            gallerieModal.innerHTML = "";
-            genererProjetModal(projet);
+            const supprimerId = document.getElementById(`${recupId}`);
+            const suppElementGallery = document.getElementById(`element${recupId}`)
+            supprimerId.remove();
+            suppElementGallery.remove();
+
+            // document.querySelector('.projet-galerie-photos').innerHTML = "";
+            // genererProjetModal(projet);
+            
         })
     })
 }
@@ -284,16 +291,16 @@ supprimerProjet();
 
 
 /*******MODAL 2 : AJOUT PHOTO ********/
-const ajoutPhotoModal= document.querySelector('.btn-ajout-photo-modal');
+const ajoutPhotoModal = document.querySelector('.btn-ajout-photo-modal');
 
-ajoutPhotoModal.addEventListener('click', function(event){
+ajoutPhotoModal.addEventListener('click', function (event) {
     event.preventDefault()
 
     const modal2 = document.querySelector('#modal2');
-    modal2.style.display=null;
+    modal2.style.display = null;
 
     const modal1 = document.querySelector('#modal1');
-    modal1.style.display='none';
+    modal1.style.display = 'none';
 })
 
 const sectionModals = document.querySelector('#modals');
@@ -305,11 +312,11 @@ modal2.setAttribute('aria-hidden', 'true');
 modal2.setAttribute('role', 'dialog');
 modal2.setAttribute('aria-modal', 'false');
 modal2.setAttribute('aria-labelleby', 'titre-modal2');
-modal2.style.display="none"
+modal2.style.display = "none"
 sectionModals.appendChild(modal2);
 
-modal2.innerHTML = 
-`<div class='modal-wrapper js-modal-stop wrapper-modal-2'>
+modal2.innerHTML =
+    `<div class='modal-wrapper js-modal-stop wrapper-modal-2'>
     <div class="picto-nav-modal">
         <i class="fa-solid fa-arrow-right fa-rotate-180"></i>
         <i class="fa-solid fa-xmark js-modal-close test"></i>
@@ -327,6 +334,7 @@ modal2.innerHTML =
         <input type="text" name="titreProjet" id="titreProjet">
         <label for="categoriesProjet">Catégorie</label>
         <select name="categoriesProjet" id="categoriesProjet">
+            <option></option>
         </select>
         <div class="separateur"></div>
         <input type="submit" value="Valider" class="btn-valider-photo"/>
@@ -341,14 +349,14 @@ const previewPhoto = function () {
     if (file) {
         const fileReader = new FileReader();
         const preview = document.querySelector('#file-preview');
-        preview.style.display=null;
+        preview.style.display = null;
         const pictoVisuel = document.querySelector('.picto-visuel');
-        pictoVisuel.style.display="none";
-        input.style.display="none";
+        pictoVisuel.style.display = "none";
+        input.style.display = "none";
         const inputFile = document.querySelector('.input-file');
-        inputFile.style.display="none";
+        inputFile.style.display = "none";
         const inputParagraph = document.querySelector('.container-nouvelle-photo p');
-        inputParagraph.style.display="none";
+        inputParagraph.style.display = "none";
 
         fileReader.onload = function (event) {
             preview.setAttribute('src', event.target.result);
@@ -360,18 +368,18 @@ input.addEventListener("change", previewPhoto);
 
 
 const pictoFleche = document.querySelector('.fa-arrow-right');
-pictoFleche.addEventListener('click', function(event){
+pictoFleche.addEventListener('click', function (event) {
     event.preventDefault()
 
     const modal2 = document.querySelector('#modal2');
-    modal2.style.display='none';
+    modal2.style.display = 'none';
 
     const modal1 = document.querySelector('#modal1');
-    modal1.style.display=null;
+    modal1.style.display = null;
 })
 
 const closeModal2 = document.querySelector('.test');
-closeModal2.addEventListener('click', function(event){
+closeModal2.addEventListener('click', function (event) {
     event.preventDefault();
     const modalClose = document.querySelector('#modal2');
     modalClose.style.display = 'none';
@@ -384,33 +392,33 @@ closeModal2.addEventListener('click', function(event){
 
 /********Récupérer les catégories pour choix ajout projet ********/
 const select = document.querySelector('select');
-
 for (let i = 0; i < categories.length; i++) {
     const elementCategories = categories[i];
 
     const optionCategories = document.createElement("option");
     optionCategories.setAttribute('value', elementCategories.id)
     optionCategories.innerText = elementCategories.name;
-    
+
     select.appendChild(optionCategories)
 }
 
 /******** Récupération des données d'ajout de l'image ********/
 const containerNewPhoto = document.querySelector('.container-new-photo');
 
-containerNewPhoto.addEventListener('submit', function(event) {
+containerNewPhoto.addEventListener('submit', function (event) {
     event.preventDefault();
 
     const valueTitre = document.querySelector('#titreProjet').value;
     const valueCategories = document.querySelector('#categoriesProjet').value;
     parseInt(valueCategories);
+    let newImage = document.querySelector('#file-upload').files[0];
 
     const formData = new FormData();
-    formData.append("image", document.querySelector('#file-upload').files[0])
+    formData.append("image", newImage)
     formData.append("title", valueTitre)
     formData.append("category", valueCategories)
 
-        fetch('http://localhost:5678/api/works', {
+    fetch('http://localhost:5678/api/works', {
         method: 'POST',
         headers: {
             'Accept': 'application/json',
@@ -419,8 +427,107 @@ containerNewPhoto.addEventListener('submit', function(event) {
         body: formData
     })
 
-    const gallerieModal = document.querySelector('.projet-galerie-photos');
-    gallerieModal.innerHTML = "";
-    // console.log(gallerieModal);
-    genererProjetModal(projet);
+    //Message d'erreur
+        .then(function (response) {
+            console.log(response.status);
+            if (response.status === 500 ||response.status === 400 ) {
+                if (document.querySelector(".message-erreur") === null) {
+                    ajoutErreur()
+                } else if (response.status === 201){
+                    document.querySelector(".container-new-photo .message-erreur").style.display = "none";
+                }
+            }
+        })
+
+
+    /********Ajout de l'image dans la gallery Home ********/
+    const gallerie = document.querySelector('.gallery');
+    // gallerieModal.innerHTML = "";
+    // genererProjet(projet);
+
+    const figureProjet = document.createElement("figure")
+    figureProjet.setAttribute('id', `element${projet.id}`);
+
+    const imageProjet = document.createElement("img");
+    imageProjet.src = document.querySelector('#file-preview').src;
+
+    const figureCaption = document.createElement("figcaption");
+    figureCaption.innerText = valueTitre;
+
+    gallerie.append(figureProjet);
+    figureProjet.append(imageProjet);
+    figureProjet.append(figureCaption)
+
+
+    /********Ajout de la nouvelle image dans la modale ********/
+    const gallerieModale = document.querySelector('.projet-galerie-photos');
+
+    const divModale = document.createElement('div')
+    divModale.setAttribute('class', 'lien-editer');
+
+    const imgModale = document.createElement('img')
+    imgModale.src = document.querySelector('#file-preview').src;
+
+    const pictoPoubelle = document.createElement("div");
+    pictoPoubelle.classList = "picto-poubelle-lien"
+    pictoPoubelle.innerHTML = `<i class="fa-solid fa-trash-can"></i>`;
+
+    const lienEditer = document.createElement("a");
+    lienEditer.innerText = "éditer";
+
+    gallerieModale.appendChild(divModale);
+    divModale.appendChild(imgModale);
+    divModale.appendChild(pictoPoubelle);
+    divModale.appendChild(lienEditer);
+
+})
+
+//Fermer la modale à l'ajout du projet
+// const closeModaltest = document.querySelector('.container-new-photo');
+// closeModaltest.addEventListener('submit', function (event) {
+//     event.preventDefault();
+//     const modalClose = document.querySelector('#modal2');
+//     modalClose.style.display = 'none';
+//     modalClose.setAttribute('aria-hidden', 'true');
+//     modalClose.setAttribute('aria-modal', 'false');
+//     modalClose.removeEventListener('click', closeModal);
+//     modalClose.querySelector('.js-modal-close').removeEventListener('click', closeModal)
+//     modalClose.querySelector('.js-modal-stop').removeEventListener('click', stopPropagation)
+// })
+
+
+function ajoutErreur() {
+    const erreur = document.querySelector(".container-new-photo");
+    const messageErreur = document.createElement("p");
+    messageErreur.innerText = `Veuillez remplir tous les champs du formulaire.`;
+    messageErreur.classList.add("message-erreur");
+    erreur.appendChild(messageErreur);
+}
+
+const form = document.querySelector(".container-new-photo");
+
+
+function verifierChamp(balise) {
+    if (balise.value === "") {
+        balise.classList.add("error");
+    } else {
+        balise.classList.remove("error");
+    }
+}
+
+let baliseTitreImg = document.getElementById("titreProjet");
+let baliseOtionCategorie = document.getElementById("categoriesProjet");
+let baliseAjoutImg = document.querySelector(".container-nouvelle-photo");
+
+form.addEventListener("submit", function (event) {
+    event.preventDefault();
+    verifierChamp(baliseTitreImg)
+    verifierChamp(baliseOtionCategorie)
+    verifierChamp(baliseAjoutImg)
+})
+
+baliseTitreImg.addEventListener("change", function () {
+    verifierChamp(baliseTitreImg);
+    verifierChamp(baliseOtionCategorie);
+    verifierChamp(baliseAjoutImg);
 })
