@@ -141,13 +141,6 @@ if (token != undefined) {
     btnEdition.innerText = "publier les changements"
     modeEdition.appendChild(btnEdition)
 
-    //Modifier la photo de l'architecte
-    const figurePhoto = document.querySelector("figure");
-    const modifierPhoto = document.createElement("p");
-    modifierPhoto.classList.add("modifier-photo");
-    modifierPhoto.innerHTML = `<a href="#"><i class="fa-regular fa-pen-to-square"></i> modifier</a>`
-    figurePhoto.appendChild(modifierPhoto)
-
     document.querySelector('.categories').style.display = "none"; //Masquer les filtres
 
     //Modifier les projets
@@ -159,30 +152,54 @@ if (token != undefined) {
 }
 
 /******** MODALE ********/
+//Création de la modale
+const modal1 = document.createElement('section');
+modal1.setAttribute("id", "modals");
+const contact = document.querySelector('#contact');
+let parent = contact.parentNode;
+parent.insertBefore(modal1, contact);
 
-//Création séparateur
-const modalWrapper = document.querySelector('.modal-wrapper')
-const separateur = document.createElement("div");
-separateur.classList.add("separateur");
-modalWrapper.appendChild(separateur)
-
-//Création du bouton pour ajouter une photo
-const ajoutPhoto = document.createElement('button');
-ajoutPhoto.classList.add('btn-ajout-photo-modal');
-ajoutPhoto.innerText = "Ajouter une photo";
-modalWrapper.appendChild(ajoutPhoto)
-
-//Création du lien pour supprimer la gallerie
-const lienSuppGallerie = document.createElement('a');
-lienSuppGallerie.classList.add('lien-supp-gallerie');
-lienSuppGallerie.href = "#",
-lienSuppGallerie.innerText = "Supprimer la gallerie";
-modalWrapper.appendChild(lienSuppGallerie);
+modal1.innerHTML =
+    `<aside id="modal1" class="modal" aria-hidden="true" role="dialog" aria-modal="false" aria-labelledby="titre-modale" style="display:none">
+        <div class="modal-wrapper js-modal-stop">
+            <div class="picto-nav-modal">
+                <i class="fa-solid fa-arrow-right fa-rotate-180" style="visibility:hidden"></i>
+                <i class="fa-solid fa-xmark js-modal-close iconeFermer"></i>
+            </div>  
+            <div id="modal-gallery">          
+                <h3 id="titre-modale">Galerie Photos</h3>
+                <div class="projet-galerie-photos"></div>
+                <div class="separateur"></div>
+                <button class="btn-ajout-photo-modal">Ajouter une photo</button>
+            </div>
+            <div id="modal-ajout-photo" style="display:none">
+                <h3 id="titre-modale2">Ajout Photo</h3>
+                <form class="container-new-photo" method="post" >
+                    <div id="container-nouvelle-photo" class="container-nouvelle-photo">
+                        <i class="fa-regular fa-image picto-visuel"></i>
+                        <img alt="Aperçu de l'image téléchargée" id="file-preview" style="display:none;">
+                        <label for="file-upload" class="input-file">+ Ajout photo</label>
+                        <input type="file" name="file" id="file-upload" accept="image/*" style="opacity:0">
+                        <p>jpg, png : 4mo max</p>
+                    </div>
+                    <label for="titreProjet">Titre</label>
+                    <input type="text" name="titreProjet" id="titreProjet">
+                    <label for="categoriesProjet">Catégorie</label>
+                    <select name="categoriesProjet" id="categoriesProjet">
+                        <option></option>
+                </select>
+                <div class="separateur"></div>
+                <input type="submit" value="Valider" class="btn-valider-photo" disabled="disabled"/>
+            </form>
+            </div>
+        </div>
+    </aside>`
 
 
 /******** AFFICHAGE MODAL ********/
 let modal = null;
 
+//Ouverture de la modale
 const openModal = function (event) {
     event.preventDefault();
     modal = document.querySelector(event.target.getAttribute('href'));
@@ -190,10 +207,16 @@ const openModal = function (event) {
     modal.setAttribute('aria-hidden', 'false');
     modal.setAttribute('aria-modal', 'true');
     modal.addEventListener('click', closeModal);
-    modal.querySelector('.js-modal-close').addEventListener('click', closeModal)
-    modal.querySelector('.js-modal-stop').addEventListener('click', stopPropagation)
+    modal.querySelector('.js-modal-close').addEventListener('click', closeModal);
+    modal.querySelector('.js-modal-stop').addEventListener('click', stopPropagation);
+
+    document.querySelector('#modal-gallery').style.display = null;
+    document.querySelector('#modal-ajout-photo').style.display = "none";
+    document.querySelector('.fa-arrow-right').style.visibility = "hidden";
 }
 
+
+//Fermeture de la modale
 const closeModal = function (event) {
     if (modal === null) return
     event.preventDefault();
@@ -201,8 +224,8 @@ const closeModal = function (event) {
     modal.setAttribute('aria-hidden', 'true');
     modal.setAttribute('aria-modal', 'false');
     modal.removeEventListener('click', closeModal);
-    modal.querySelector('.js-modal-close').removeEventListener('click', closeModal)
-    modal.querySelector('.js-modal-stop').removeEventListener('click', stopPropagation)
+    modal.querySelector('.js-modal-close').removeEventListener('click', closeModal);
+    modal.querySelector('.js-modal-stop').removeEventListener('click', stopPropagation);
     modal = null;
 }
 
@@ -220,9 +243,10 @@ window.addEventListener('keydown', function (event) {
 })
 
 
-/******** GÉNARATION DES PROJET DANS LA MODAL ********/
+/******** GÉNARATION DES PROJET DANS LA MODALE ********/
 const genererProjetModal = function () {
     for (let i = 0; i < projet.length; i++) {
+
         //Création d'une nouvelle div contenant l'image et le lien pour éditer
         const elementProjet = projet[i];
 
@@ -246,11 +270,6 @@ const genererProjetModal = function () {
         pictoPoubelle.setAttribute("data-id", projetImage.setAttribute = ("data", elementProjet.id))
         containerImageProjet.appendChild(pictoPoubelle)
 
-        //Création du lien "editer" sour l'image
-        const lienEditer = document.createElement("a");
-        // lienEditer.href = "#"
-        lienEditer.innerText = "éditer";
-        containerImageProjet.appendChild(lienEditer);
     }
 }
 
@@ -269,7 +288,6 @@ function supprimerProjet() {
                 method: 'DELETE',
                 headers: {
                     'Accept': '*/*',
-                    // 'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`,
                 },
                 body: null
@@ -279,10 +297,6 @@ function supprimerProjet() {
             const suppElementGallery = document.getElementById(`element${recupId}`)
             supprimerId.remove();
             suppElementGallery.remove();
-
-            // document.querySelector('.projet-galerie-photos').innerHTML = "";
-            // genererProjetModal(projet);
-            
         })
     })
 }
@@ -290,57 +304,25 @@ function supprimerProjet() {
 supprimerProjet();
 
 
-/*******MODAL 2 : AJOUT PHOTO ********/
-const ajoutPhotoModal = document.querySelector('.btn-ajout-photo-modal');
+//Navigation entre les modales
+const btnAjoutPhoto = document.querySelector('.btn-ajout-photo-modal');
+const divModalGallery = document.querySelector('#modal-gallery');
+const divModalAjout = document.querySelector('#modal-ajout-photo');
+const flecheRetour = document.querySelector('.fa-arrow-right');
 
-ajoutPhotoModal.addEventListener('click', function (event) {
-    event.preventDefault()
 
-    const modal2 = document.querySelector('#modal2');
-    modal2.style.display = null;
-
-    const modal1 = document.querySelector('#modal1');
-    modal1.style.display = 'none';
+btnAjoutPhoto.addEventListener("click", function (event) {
+    event.preventDefault();
+    divModalGallery.style.display = "none";
+    divModalAjout.style.display = null;
+    flecheRetour.style.visibility = null;
 })
 
-const sectionModals = document.querySelector('#modals');
-
-const modal2 = document.createElement('aside');
-modal2.setAttribute('id', 'modal2');
-modal2.setAttribute('class', 'modal');
-modal2.setAttribute('aria-hidden', 'true');
-modal2.setAttribute('role', 'dialog');
-modal2.setAttribute('aria-modal', 'false');
-modal2.setAttribute('aria-labelleby', 'titre-modal2');
-modal2.style.display = "none"
-sectionModals.appendChild(modal2);
-
-modal2.innerHTML =
-    `<div class='modal-wrapper js-modal-stop wrapper-modal-2'>
-    <div class="picto-nav-modal">
-        <i class="fa-solid fa-arrow-right fa-rotate-180"></i>
-        <i class="fa-solid fa-xmark js-modal-close test"></i>
-    </div>
-    <h3 id="titre-modale2">Ajout Photo</h3>
-    <div class="container-nouvelle-photo">
-        <i class="fa-regular fa-image picto-visuel"></i>
-        <img src="#" alt="Aperçu de l'image téléchargée" id="file-preview" style="display:none;">
-        <input type="file" name="file" id="file-upload" accept="image/*">
-        <label for="file-upload" class="input-file">+ Ajout photo</label>
-        <p>jpg, png : 4mo max</p>
-    </div>
-    <form class="container-new-photo" method="post" >
-        <label for="titreProjet">Titre</label>
-        <input type="text" name="titreProjet" id="titreProjet">
-        <label for="categoriesProjet">Catégorie</label>
-        <select name="categoriesProjet" id="categoriesProjet">
-            <option></option>
-        </select>
-        <div class="separateur"></div>
-        <input type="submit" value="Valider" class="btn-valider-photo"/>
-    </form>
-</div>`;
-
+flecheRetour.addEventListener("click", function () {
+    divModalGallery.style.display = null;
+    divModalAjout.style.display = "none";
+    flecheRetour.style.visibility = "hidden";
+})
 
 /********Aperçu de l'image a télécharger********/
 const input = document.getElementById('file-upload');
@@ -366,30 +348,6 @@ const previewPhoto = function () {
 }
 input.addEventListener("change", previewPhoto);
 
-
-const pictoFleche = document.querySelector('.fa-arrow-right');
-pictoFleche.addEventListener('click', function (event) {
-    event.preventDefault()
-
-    const modal2 = document.querySelector('#modal2');
-    modal2.style.display = 'none';
-
-    const modal1 = document.querySelector('#modal1');
-    modal1.style.display = null;
-})
-
-const closeModal2 = document.querySelector('.test');
-closeModal2.addEventListener('click', function (event) {
-    event.preventDefault();
-    const modalClose = document.querySelector('#modal2');
-    modalClose.style.display = 'none';
-    modalClose.setAttribute('aria-hidden', 'true');
-    modalClose.setAttribute('aria-modal', 'false');
-    modalClose.removeEventListener('click', closeModal);
-    modalClose.querySelector('.js-modal-close').removeEventListener('click', closeModal)
-    modalClose.querySelector('.js-modal-stop').removeEventListener('click', stopPropagation)
-})
-
 /********Récupérer les catégories pour choix ajout projet ********/
 const select = document.querySelector('select');
 for (let i = 0; i < categories.length; i++) {
@@ -402,21 +360,30 @@ for (let i = 0; i < categories.length; i++) {
     select.appendChild(optionCategories)
 }
 
+
 /******** Récupération des données d'ajout de l'image ********/
 const containerNewPhoto = document.querySelector('.container-new-photo');
 
 containerNewPhoto.addEventListener('submit', function (event) {
     event.preventDefault();
 
-    const valueTitre = document.querySelector('#titreProjet').value;
-    const valueCategories = document.querySelector('#categoriesProjet').value;
-    parseInt(valueCategories);
-    let newImage = document.querySelector('#file-upload').files[0];
+    let imageUrl = document.querySelector('#file-upload').files[0];
+    const tailleMaxi = 4 * 1024 * 1024;
+
+    if(imageUrl.size > tailleMaxi) {
+        alert("votre image est trop volumineuse. Merci d’ajouter une image de 4Mo maximum");
+        return
+    }
+
+
+    let title = document.querySelector('#titreProjet').value;
+    let categoryId = document.querySelector('#categoriesProjet').value;
+    parseInt(categoryId);
 
     const formData = new FormData();
-    formData.append("image", newImage)
-    formData.append("title", valueTitre)
-    formData.append("category", valueCategories)
+    formData.append("image", imageUrl)
+    formData.append("title", title)
+    formData.append("category", categoryId)
 
     fetch('http://localhost:5678/api/works', {
         method: 'POST',
@@ -427,13 +394,12 @@ containerNewPhoto.addEventListener('submit', function (event) {
         body: formData
     })
 
-    //Message d'erreur
+
+        //Message d'erreur
         .then(function (response) {
-            console.log(response.status);
-            if (response.status === 500 ||response.status === 400 ) {
+            if (response.status === 500 || response.status === 400) {
                 if (document.querySelector(".message-erreur") === null) {
-                    ajoutErreur()
-                } else if (response.status === 201){
+                } else if (response.status === 201) {
                     document.querySelector(".container-new-photo .message-erreur").style.display = "none";
                 }
             }
@@ -441,29 +407,28 @@ containerNewPhoto.addEventListener('submit', function (event) {
 
 
     /********Ajout de l'image dans la gallery Home ********/
+
     const gallerie = document.querySelector('.gallery');
-    // gallerieModal.innerHTML = "";
-    // genererProjet(projet);
 
     const figureProjet = document.createElement("figure")
-    figureProjet.setAttribute('id', `element${projet.id}`);
+    figureProjet.setAttribute('id', `new`);
 
     const imageProjet = document.createElement("img");
     imageProjet.src = document.querySelector('#file-preview').src;
 
     const figureCaption = document.createElement("figcaption");
-    figureCaption.innerText = valueTitre;
+    figureCaption.innerText = title;
 
     gallerie.append(figureProjet);
     figureProjet.append(imageProjet);
     figureProjet.append(figureCaption)
 
-
     /********Ajout de la nouvelle image dans la modale ********/
     const gallerieModale = document.querySelector('.projet-galerie-photos');
 
     const divModale = document.createElement('div')
-    divModale.setAttribute('class', 'lien-editer');
+    divModale.setAttribute('class', 'lien-editer newLien');
+
 
     const imgModale = document.createElement('img')
     imgModale.src = document.querySelector('#file-preview').src;
@@ -472,29 +437,12 @@ containerNewPhoto.addEventListener('submit', function (event) {
     pictoPoubelle.classList = "picto-poubelle-lien"
     pictoPoubelle.innerHTML = `<i class="fa-solid fa-trash-can"></i>`;
 
-    const lienEditer = document.createElement("a");
-    lienEditer.innerText = "éditer";
-
     gallerieModale.appendChild(divModale);
     divModale.appendChild(imgModale);
     divModale.appendChild(pictoPoubelle);
-    divModale.appendChild(lienEditer);
-
 })
 
-//Fermer la modale à l'ajout du projet
-// const closeModaltest = document.querySelector('.container-new-photo');
-// closeModaltest.addEventListener('submit', function (event) {
-//     event.preventDefault();
-//     const modalClose = document.querySelector('#modal2');
-//     modalClose.style.display = 'none';
-//     modalClose.setAttribute('aria-hidden', 'true');
-//     modalClose.setAttribute('aria-modal', 'false');
-//     modalClose.removeEventListener('click', closeModal);
-//     modalClose.querySelector('.js-modal-close').removeEventListener('click', closeModal)
-//     modalClose.querySelector('.js-modal-stop').removeEventListener('click', stopPropagation)
-// })
-
+/*******Message d'erreur *********/
 
 function ajoutErreur() {
     const erreur = document.querySelector(".container-new-photo");
@@ -506,28 +454,152 @@ function ajoutErreur() {
 
 const form = document.querySelector(".container-new-photo");
 
-
 function verifierChamp(balise) {
     if (balise.value === "") {
         balise.classList.add("error");
-    } else {
+    } else if (balise.value != "") {
         balise.classList.remove("error");
     }
 }
 
+function verifierPhoto(balise) {
+    const imagePhoto = document.querySelector('#file-upload');
+    const form = document.querySelector("#container-nouvelle-photo");
+
+    if (imagePhoto.value === '') {
+        form.classList.add("error");
+    } else if (imagePhoto.value != '') {
+        form.classList.remove("error");
+    }
+}
+
+
 let baliseTitreImg = document.getElementById("titreProjet");
 let baliseOtionCategorie = document.getElementById("categoriesProjet");
-let baliseAjoutImg = document.querySelector(".container-nouvelle-photo");
+let baliseImgSrc = document.querySelector('#file-upload');
 
+//Supprimer le comportement par défaut + vérifier si les champs sont remplis ou non
 form.addEventListener("submit", function (event) {
     event.preventDefault();
     verifierChamp(baliseTitreImg)
     verifierChamp(baliseOtionCategorie)
-    verifierChamp(baliseAjoutImg)
+    verifierPhoto(baliseImgSrc)
 })
 
+
+//À l'ajout de l'IMAGE, vérifier si les autres champs sont remplis
+baliseImgSrc.addEventListener("change", function () {
+    verifierChamp(baliseTitreImg)
+    verifierChamp(baliseOtionCategorie)
+    verifierPhoto(baliseImgSrc)
+
+    if (baliseImgSrc.value === '' || baliseTitreImg.value === '' || baliseOtionCategorie.value === '') {
+        //Si les autres champs ne sont pas remplis, ajouter un message d'erreur, s'il n'est pas déjà afficher
+        if (document.querySelector(".message-erreur") === null) {
+            ajoutErreur();
+        }
+    }
+
+    //Supprimer le message d'erreur si l'ensemble des champs est rempli
+    if (baliseImgSrc.value != '' && baliseTitreImg.value != '' && baliseOtionCategorie.value != '') {
+        document.querySelector('.message-erreur').remove();
+    }
+})
+
+//À l'ajout d'un TITRE, vérifier si les autres champs sont remplis
 baliseTitreImg.addEventListener("change", function () {
-    verifierChamp(baliseTitreImg);
-    verifierChamp(baliseOtionCategorie);
-    verifierChamp(baliseAjoutImg);
+    verifierChamp(baliseTitreImg)
+    verifierChamp(baliseOtionCategorie)
+    verifierPhoto(baliseImgSrc)
+
+    if (baliseImgSrc.value === '' || baliseTitreImg.value === '' || baliseOtionCategorie.value === '') {
+        //Si les autres champs ne sont pas remplis, ajouter un message d'erreur, s'il n'est pas déjà afficher
+        if (document.querySelector(".message-erreur") === null) {
+            ajoutErreur();
+        }
+    }
+
+    //Supprimer le message d'erreur si l'ensemble des champs est rempli
+    if (baliseImgSrc.value != '' && baliseTitreImg.value != '' && baliseOtionCategorie.value != '') {
+        document.querySelector('.message-erreur').remove();
+    }
+})
+
+//À l'ajout de la CATEGORIE, vérifier si les autres champs sont remplis
+baliseOtionCategorie.addEventListener("change", function () {
+    verifierChamp(baliseTitreImg)
+    verifierChamp(baliseOtionCategorie)
+    verifierPhoto(baliseImgSrc)
+
+    if (baliseImgSrc.value === '' || baliseTitreImg.value === '' || baliseOtionCategorie.value === '') {
+        //Si les autres champs ne sont pas remplis, ajouter un message d'erreur, s'il n'est pas déjà afficher
+        if (document.querySelector(".message-erreur") === null) {
+            ajoutErreur();
+        }
+    }
+    //Supprimer le message d'erreur si l'ensemble des champs est rempli
+    if (baliseImgSrc.value != '' && baliseTitreImg.value != '' && baliseOtionCategorie.value != '') {
+        document.querySelector('.message-erreur').remove();
+    }
+})
+
+
+/********Bouton valider disabled ********/
+const imagePhoto = document.querySelector('#file-upload');
+const titrePhoto = document.querySelector('#titreProjet');
+const optionPhoto = document.querySelector('#categoriesProjet');
+
+let btnDisabled = document.querySelector('.btn-valider-photo');
+btnDisabled.disabled = true;
+
+
+let wrapper2 = document.querySelector('#modal-ajout-photo')
+wrapper2.addEventListener("change", function () {
+    if (titrePhoto.value != "" && imagePhoto.value != '' && optionPhoto.value != '') {
+        btnDisabled.disabled = false;
+        btnDisabled.style.backgroundColor = "#1D6154";
+    }
+})
+
+const closeModalBtn = document.querySelector('.container-new-photo');
+closeModalBtn.addEventListener('submit', function (event) {
+    if (btnDisabled.disabled === false) {
+        event.preventDefault();
+        const modalClose = document.querySelector('#modal1');
+        modalClose.style.display = 'none';
+        modalClose.setAttribute('aria-hidden', 'true');
+        modalClose.setAttribute('aria-modal', 'false');
+        modalClose.removeEventListener('click', closeModal);
+        modalClose.querySelector('.js-modal-close').removeEventListener('click', closeModal)
+        modalClose.querySelector('.js-modal-stop').removeEventListener('click', stopPropagation);
+    }
+
+    //Suppression de l'image précédente, et possibilité d'ajouter de nouveaux projet
+    document.querySelector('.container-new-photo').reset();
+    document.querySelector('#file-upload').value = '';
+    document.querySelector('#file-preview').style.display = "none";
+    document.querySelector('.picto-visuel').style.display = null;
+    document.querySelector('.input-file').style.display = null;
+    document.querySelector('#file-upload').style.display = null;
+    document.querySelector('.container-nouvelle-photo p').style.display = null;
+    let btnValider = document.querySelector('.btn-valider-photo');
+    btnValider.disabled = "true";
+
+    if (btnValider.disabled === true) {
+        btnValider.style.backgroundColor = "#A7A7A7";
+    }
+
+
+    let newProjet = document.querySelectorAll('.picto-poubelle-lien');
+    newProjet.forEach(project => {
+        project.addEventListener("click", function (event) {
+            event.preventDefault()
+            const supprimerId = document.querySelector(".newLien");
+            const suppElementGallery = document.getElementById("new")
+            supprimerId.remove();
+            suppElementGallery.remove();
+
+
+        })
+    })
 })

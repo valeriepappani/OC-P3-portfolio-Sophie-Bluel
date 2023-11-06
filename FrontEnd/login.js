@@ -24,7 +24,6 @@ function ajoutListenerLogin() {
         window.localStorage.setItem("userId", logResponse.userId);//Stockage de l'userId dans le localStorage
 
         const logStatus = statutConnexion.status;
-        // console.log(`le statut de connexion est ${logStatus}`)
 
         //Message d'erreur et redirection
         if (logStatus === 200) {
@@ -44,7 +43,6 @@ ajoutListenerLogin()
 const userId = localStorage.getItem("userId");
 
 if (userId != null) {
-    console.log("L'utilisateur est connecté")
     const btnLog = document.querySelector('.btn-login');
     btnLog.innerText = "logout"
 }
@@ -66,7 +64,6 @@ function logout() {
         localStorage.removeItem("token");
         const btnLog = document.querySelector('.btn-login');
         btnLog.innerText = "login"
-        console.log("L\'utilisateur n'est plus connecté")
     })
 }
 
@@ -76,7 +73,6 @@ logout();
 /******** ERREUR DE CONNEXION ********/
 function messageErreur() {
     const erreur = document.querySelector("form");
-    //Si p existe déjà, alors on laisse p afficher, sinon création du paragraphe d'erreur
     const messageErreur = document.createElement("p");
     messageErreur.innerText = `Utilisateur introuvable ! Merci de vérifier votre adresse email et/ou votre mot de passe.`;
     messageErreur.classList.add("message-erreur");
