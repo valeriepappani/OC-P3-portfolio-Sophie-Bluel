@@ -72,17 +72,46 @@ boutonObjets.addEventListener("click", function () {
     })
     document.querySelector(".gallery").innerHTML = "";
     genererProjet(objetsFiltres);
+
+    boutonObjets.style.backgroundColor = "#1D6154";
+    boutonObjets.style.color = "#FFF";
+
+    const filtreTous = document.querySelector(".Tous");
+    filtreTous.style.backgroundColor="#FFF";
+    filtreTous.style.color="#1D6154";
+
+    const filtreAppartement = document.querySelector(".Appartements");
+    filtreAppartement.style.backgroundColor="#FFF";
+    filtreAppartement.style.color="#1D6154";
+    
+    const filtreHotel = document.querySelector(".Hotels");
+    filtreHotel.style.backgroundColor="#FFF";
+    filtreHotel.style.color="#1D6154";
 })
 
 //Ajout du listener pour trier les projets par Appartements
 const boutonAppartements = document.querySelector(".Appartements");
-
 boutonAppartements.addEventListener("click", function () {
     const appartementsFiltres = projet.filter(function (projet) {
         return projet.categoryId === 2;
     })
     document.querySelector(".gallery").innerHTML = "";
-    genererProjet(appartementsFiltres)
+    genererProjet(appartementsFiltres);
+
+    boutonAppartements.style.backgroundColor = "#1D6154";
+    boutonAppartements.style.color = "#FFF";
+
+    const filtreObjet = document.querySelector(".Objets");
+    filtreObjet.style.backgroundColor="#FFF";
+    filtreObjet.style.color="#1D6154";
+
+    const filtreTous = document.querySelector(".Tous");
+    filtreTous.style.backgroundColor="#FFF";
+    filtreTous.style.color="#1D6154";
+
+    const filtreHotel = document.querySelector(".Hotels");
+    filtreHotel.style.backgroundColor="#FFF";
+    filtreHotel.style.color="#1D6154";
 })
 
 //Ajout du listener pour trier les projets par Hotels et Restaurants
@@ -94,10 +123,26 @@ boutonHotels.addEventListener("click", function () {
     })
     document.querySelector(".gallery").innerHTML = "";
     genererProjet(hotelsFiltres)
+    boutonHotels.style.backgroundColor = "#1D6154";
+    boutonHotels.style.color = "#FFF";
+
+    const filtreTous = document.querySelector(".Tous");
+    filtreTous.style.backgroundColor="#FFF";
+    filtreTous.style.color="#1D6154";
+
+    const filtreAppartement = document.querySelector(".Appartements");
+    filtreAppartement.style.backgroundColor="#FFF";
+    filtreAppartement.style.color="#1D6154";
+    
+    const filtreObjet = document.querySelector(".Objets");
+    filtreObjet.style.backgroundColor="#FFF";
+    filtreObjet.style.color="#1D6154";
 })
 
 //Ajout du listener pour faire apparaitre tous les projets
 const projetGlobal = document.querySelector(".Tous");
+projetGlobal.style.backgroundColor = "#1D6154";
+projetGlobal.style.color = "#FFF";
 
 projetGlobal.addEventListener("click", function () {
     const tousProjet = projet.filter(function (projet) {
@@ -105,6 +150,23 @@ projetGlobal.addEventListener("click", function () {
     })
     document.querySelector(".gallery").innerHTML = "";
     genererProjet(tousProjet)
+
+    projetGlobal.style.backgroundColor = "#1D6154";
+projetGlobal.style.color = "#FFF";
+
+    const filtreAppartement = document.querySelector(".Appartements");
+    filtreAppartement.style.backgroundColor="#FFF";
+    filtreAppartement.style.color="#1D6154";
+    
+    const filtreObjet = document.querySelector(".Objets");
+    filtreObjet.style.backgroundColor="#FFF";
+    filtreObjet.style.color="#1D6154";
+
+    const filtreHotels = document.querySelector(".Hotels");
+    filtreHotels.style.backgroundColor="#FFF";
+    filtreHotels.style.color="#1D6154";
+
+
 })
 
 
